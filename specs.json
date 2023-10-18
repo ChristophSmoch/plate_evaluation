@@ -1,0 +1,6 @@
+{
+    "path_to_polyfem_bin": "../polyfem/build/PolyFEM_bin",
+    "thickness_bounds": [6, 13],
+    "inplaneRes_bound": [5,8],
+    "outofplaneRes_bound":[1,3]
+}
