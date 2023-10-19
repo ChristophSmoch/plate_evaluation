@@ -8,9 +8,9 @@ with open("specs.json", "r") as f:
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
 
-thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] + 1 ) ]
-inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] + 1) ]
-outofplaneRes = [ 2.**( -i ) for i in range(outofplaneRes_bounds[0] - 1, outofplaneRes_bounds[1] ) ]
+thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
+inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
+outofplaneRes = [ 2.**( -i ) for i in range(outofplaneRes_bounds[0] - 1, outofplaneRes_bounds[1] - 1 ) ]
 poissonRatios = [0.0] 
 
 
@@ -58,6 +58,7 @@ for H in inplaneRes:
                     "output": {
                         "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/stats.json",
                         "data": {
+                            "nodes": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_single/nodes.txt",
                             "solution": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/sol.txt",
                             "advanced": {
                                 "reorder_nodes": True
