@@ -10,7 +10,7 @@ with open("specs.json", "r") as f:
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1] ) ]
+outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
 poissonRatios = [0.0] 
 
 
@@ -20,13 +20,13 @@ for H in inplaneRes:
             for nu in poissonRatios:
                 strnu = str(nu)
                 strnu = strnu.replace(".", "")
-                file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
+                file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)) )
                 dictionary = {
                     "geometry": {
                         "advanced": {
                             "normalize_mesh": False
                         },
-                        "mesh": "meshes/" + file3D + "_hexahedral.msh",
+                        "mesh": "meshes/" + file3D + "_tetrahedral.msh",
                         "surface_selection": {
                             "threshold": 1e-07
                         }
@@ -55,16 +55,15 @@ for H in inplaneRes:
                         }]
                         },
                     "output": {
-                        "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/stats.json",
+                        "json": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/stats.json",
                         "data": {
-                            "nodes": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/nodes.txt",
-                            "solution": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/sol.txt",
+                            "solution": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/sol.txt",
                             "advanced": {
                                 "reorder_nodes": True
                             }
                         },
-                        "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/result.vtu",
-                        		"high_order_mesh": False}
+                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/result.vtu"
+                        }
                     },
                     "space": {
                         "discr_order": 2
@@ -79,5 +78,5 @@ for H in inplaneRes:
                 json_object = json.dumps(dictionary)
  
                 # Writing to sample.json
-                with open("json/run_" + file3D + "_nu" + strnu + "_hexahedral.json", "w") as outfile:
+                with open("json/run_" + file3D + "_nu" + strnu + "_tetrahedral.json", "w") as outfile:
                     outfile.write(json_object)

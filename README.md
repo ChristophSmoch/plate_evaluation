@@ -3,7 +3,7 @@
 ## Parameters are specified in specs.json
 ## paths to polyfem binary and gmsh binary have to be provided in specs.json
 
-### Before running generateMesh_testPoints_tetrahedral.py / generateMesh_testPoints_hexahedral.py / generateMesh_testPoints_hexahedral_single.py
+### Before running generateMesh_testPoints_tetrahedral.py / generateMesh_testPoints_hexahedral.py / generateMesh_testPoints_hexahedral_single.py :
 
 mkdir meshes
 

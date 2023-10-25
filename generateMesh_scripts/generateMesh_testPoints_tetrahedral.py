@@ -11,7 +11,7 @@ with open("specs.json", "r") as f:
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( -i ) for i in range(outofplaneRes_bounds[0] - 1, outofplaneRes_bounds[1] - 1 ) ]
+outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1] ) ]
 
 npts_sqrt = 7
 coord = 1. / (npts_sqrt + 1.)
@@ -19,8 +19,7 @@ coord = 1. / (npts_sqrt + 1.)
 for H in inplaneRes:
     for h in thickness:
         for g in outofplaneRes:
-            g_real = h * g
-            file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2-" + str(int(-np.log2(g_real)) + 1) + "_tetrahedral"
+            file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(-np.log2(g))) + "_tetrahedral"
             with open( "meshes/" + file3D + ".geo", "w" ) as f:
                 f.write("H = " + str(H) + ";\n")
                 f.write("h = " + str(h) + ";\n")
@@ -102,9 +101,7 @@ for H in inplaneRes:
                         f.write("Plane Surface(" + str(k) + ") = {" + str(k) + "};\n")
                 
                 for i in range(  (npts_sqrt - 1)**2 + 4):
-                    f.write("Extrude {0,0,h/2} {Surface{" + str(i + 1) + "}; Layers{g};}\n")
-                for i in range( (npts_sqrt - 1)**2 + 4):
-                    f.write("Extrude {0,0,-h/2} {Surface{" + str(i + 1) + "}; Layers{g};}\n")
+                    f.write("Extrude {0,0,h} {Surface{" + str(i + 1) + "}; Layers{g};}\n")
 
             popen = subprocess.Popen( path_to_gmsh_bin + " -3 " + "meshes/" + file3D + ".geo" + " meshes/" + file3D + ".msh" , stdout = subprocess.PIPE, shell = True )
             popen.wait()

@@ -20,7 +20,7 @@ for H in inplaneRes:
             for nu in poissonRatios:
                 strnu = str(nu)
                 strnu = strnu.replace(".", "")
-                file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)) )
+                file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)) )
 
                 popen = subprocess.Popen("mkdir resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral", stdout = subprocess.PIPE, shell = True )
                 popen.wait()
