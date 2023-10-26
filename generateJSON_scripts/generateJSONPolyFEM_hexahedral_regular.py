@@ -8,10 +8,13 @@ with open("specs.json", "r") as f:
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
 
-thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
-inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1]) ]
-poissonRatios = [0.0] 
+thickness = [2.**(- i)
+             for i in range(thickness_bounds[0], thickness_bounds[1])]
+inplaneRes = [2.**(-i)
+              for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1])]
+outofplaneRes = [
+    2.**(i) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1])]
+poissonRatios = [0.0]
 
 
 for H in inplaneRes:
@@ -21,7 +24,9 @@ for H in inplaneRes:
             for nu in poissonRatios:
                 strnu = str(nu)
                 strnu = strnu.replace(".", "")
-                file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
+                file3D = "regularplate3D_h2-" + \
+                    str(int(-np.log2(h))) + "_H2-" + \
+                    str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
                 dictionary = {
                     "geometry": {
                         "advanced": {
@@ -33,28 +38,28 @@ for H in inplaneRes:
                         }
                     },
                     "materials": {
-                            "type": "LinearElasticity",
-                            "E": 100,
-                            "nu": nu,
-                            "rho": 1
-                        },
+                        "type": "LinearElasticity",
+                        "E": 100,
+                        "nu": nu,
+                        "rho": 1
+                    },
 
                     "boundary_conditions": {
-                        "rhs": [0,0,10. * h**2 ],
+                        "rhs": [0, 0, 10. * h**2],
                         "dirichlet_boundary": [{
                             "id": 1,
                             "value": [0.0, 0.0, 0.0]
-                        },{
+                        }, {
                             "id": 2,
                             "value": [0.0, 0.0, 0.0]
-                        },{
+                        }, {
                             "id": 3,
                             "value": [0.0, 0.0, 0.0]
-                        },{
+                        }, {
                             "id": 4,
                             "value": [0.0, 0.0, 0.0]
                         }]
-                        },
+                    },
                     "output": {
                         "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/stats.json",
                         "data": {
@@ -65,7 +70,11 @@ for H in inplaneRes:
                             }
                         },
                         "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/result.vtu",
-                        		"high_order_mesh": False}
+                                     "high_order_mesh": False,
+                                     "options": {
+                                         "use_hdf5" : True
+                                     }
+                                     }
                     },
                     "space": {
                         "discr_order": 2
@@ -78,7 +87,7 @@ for H in inplaneRes:
                 }
                 # Serializing json
                 json_object = json.dumps(dictionary)
- 
+
                 # Writing to sample.json
                 with open("json/run_" + file3D + "_nu" + strnu + "_hexahedral.json", "w") as outfile:
                     outfile.write(json_object)

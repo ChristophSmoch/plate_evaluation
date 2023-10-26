@@ -10,7 +10,7 @@ with open("specs.json", "r") as f:
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
+outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1] ) ]
 poissonRatios = [0.0] 
 
 
@@ -20,7 +20,7 @@ for H in inplaneRes:
             for nu in poissonRatios:
                 strnu = str(nu)
                 strnu = strnu.replace(".", "")
-                file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)) )
+                file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
                 dictionary = {
                     "geometry": {
                         "advanced": {
@@ -55,21 +55,21 @@ for H in inplaneRes:
                         }]
                         },
                     "output": {
-                        "json": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/stats.json",
+                        "json": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/stats.json",
                         "data": {
-                            "solution": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/sol.txt",
+                            "solution": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/sol.txt",
                             "advanced": {
                                 "reorder_nodes": True
                             }
                         },
-                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/result.vtu",
+                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/result.vtu",
                                      "options": {
                                          "use_hdf5" : True
                                      }
                         }
                     },
                     "space": {
-                        "discr_order": 2
+                        "discr_order": 4
                     },
                     "solver": {
                         "linear": {
@@ -81,5 +81,5 @@ for H in inplaneRes:
                 json_object = json.dumps(dictionary)
  
                 # Writing to sample.json
-                with open("json/run_" + file3D + "_nu" + strnu + "_tetrahedral.json", "w") as outfile:
+                with open("json/run_" + file3D + "_nu" + strnu + "_tetrahedral_quartic.json", "w") as outfile:
                     outfile.write(json_object)

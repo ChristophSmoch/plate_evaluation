@@ -62,7 +62,10 @@ for H in inplaneRes:
                                 "reorder_nodes": True
                             }
                         },
-                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/result.vtu"
+                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral/result.vtu",
+                                     "options": {
+                                         "use_hdf5" : True
+                                     }
                         }
                     },
                     "space": {

@@ -64,7 +64,10 @@ for H in inplaneRes:
                             }
                         },
                         "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral/result.vtu",
-                        		"high_order_mesh": False}
+                        		"high_order_mesh": False,
+                                     "options": {
+                                         "use_hdf5" : True
+                                     }}
                     },
                     "space": {
                         "discr_order": 2

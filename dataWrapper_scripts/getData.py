@@ -1,5 +1,6 @@
 import numpy as np
 import json
+from readHDF import readFromHdf
 
 with open("specs.json", "r") as f:
     specs = json.load(f)

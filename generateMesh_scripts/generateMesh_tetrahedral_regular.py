@@ -41,7 +41,7 @@ for H in inplaneRes:
                         for j in range(int(1/H)):
                             hex_elem_nr = j + int( 1 / H  ) * i +  int( 1 / H  )**2 * k + 1
                             node_nr = hex_elem_nr + i + k * int(2 / H) + k
-                            if k % 2 == 0:
+                            if (k + j + i) % 2 == 0:
                                 f.write(str(hex_elem_nr * 5 - 4) + " 4 0 " + str(node_nr) + " " + str(node_nr + 1) + " " + str(node_nr  + int(1 / H + 1)) + " " + str(node_nr + int( 1 / H + 1 )**2) + "\n")
                                 f.write(str(hex_elem_nr * 5 - 3) + " 4 0 " + str(node_nr + 1) + " " + str(node_nr + 1 + int(1 / H + 1)) + " " + str(node_nr  + int(1 / H + 1)  ) + " " + str(node_nr + 1 + int( 1 / H + 1 ) + int( 1 / H + 1 )**2) + "\n")
                                 f.write(str(hex_elem_nr * 5 - 2) + " 4 0 " + str(node_nr + 1 + int( 1 / H + 1 )**2) + " " + str(node_nr + int( 1 / H + 1 )**2) + " " + str(node_nr + 1 + int(1 / H + 1) + int( 1 / H + 1 )**2 ) + " " + str(node_nr + 1 ) + "\n")
@@ -51,7 +51,7 @@ for H in inplaneRes:
                             else:
                                 f.write(str(hex_elem_nr * 5 - 4) + " 4 0 " + str(node_nr) + " " + str(node_nr + 1) + " " + str(node_nr + 1 + int(1 / H + 1)) + " " + str(node_nr + 1 + int( 1 / H + 1 )**2) + "\n")
                                 f.write(str(hex_elem_nr * 5 - 3) + " 4 0 " + str(node_nr ) + " " + str(node_nr + 1 + int(1 / H + 1)) + " " + str(node_nr  + int(1 / H + 1)  ) + " " + str(node_nr + int( 1 / H + 1 ) + int( 1 / H + 1 )**2) + "\n")
-                                f.write(str(hex_elem_nr * 5 - 2) + " 4 0 " + str(node_nr  + int( 1 / H + 1 )**2) + " " + str(node_nr + int( 1 / H + 1 ) + int( 1 / H + 1 )**2) + " " + str(node_nr + 1 + int( 1 / H + 1 )**2 ) + " " + str(node_nr + 1 ) + "\n")
+                                f.write(str(hex_elem_nr * 5 - 2) + " 4 0 " + str(node_nr  + int( 1 / H + 1 )**2) + " " + str(node_nr + int( 1 / H + 1 ) + int( 1 / H + 1 )**2) + " " + str(node_nr + 1 + int( 1 / H + 1 )**2 ) + " " + str(node_nr ) + "\n")
                                 f.write(str(hex_elem_nr * 5 - 1) + " 4 0 " + str(node_nr + 1 + int( 1 / H + 1 )**2) + " " + str(node_nr + int(1 / H + 1) + int( 1 / H + 1 )**2) + " " + str(node_nr + 1 + int(1 / H + 1) + int( 1 / H + 1 )**2 ) + " " + str(node_nr + 1 + int(1 / H + 1) ) + "\n")
                                 f.write(str(hex_elem_nr * 5 - 0) + " 4 0 " + str(node_nr ) + " " + str(node_nr + 1 + int(1 / H + 1) ) + " " + str(node_nr + int( 1 / H + 1 ) + int( 1 / H + 1 )**2 ) + " " + str(node_nr + 1 + int(1 / H + 1)**2 ) + "\n")
 
