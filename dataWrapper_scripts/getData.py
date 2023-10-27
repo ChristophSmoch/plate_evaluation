@@ -118,35 +118,37 @@ for H in inplaneRes:
             refpolyfem = np.array(refvec)
 
             file2D = "pointplate2D_h1e-1_H2-" + str(int(-np.log2(H))) + "_nu" + strnu
+            try:
+                with open("results_2D/" + file2D + "/convergenceTimeSolve.dat", "r") as f:
+                    for lines in f:
+                        if lines.startswith("0"):
+                            refstep, value = lines.split(" ")
+                            solve_time_PESOPT = float(value)
+                vec =   getpesoptVectors(H,nu)
+            
+                l2_2D =  np.linalg.norm(vec - refpesopt[thickness.index(h)][poissonRatios.index(nu)])
+                l2_3D =  np.linalg.norm(vec - refpolyfem[3 * 98:])
 
-            with open("results_2D/" + file2D + "/convergenceTimeSolve.dat", "r") as f:
-                for lines in f:
-                    if lines.startswith("0"):
-                        refstep, value = lines.split(" ")
-                        solve_time_PESOPT = float(value)
-            vec =   getpesoptVectors(H,nu)
-        
-            l2_2D =  np.linalg.norm(vec - refpesopt[thickness.index(h)][poissonRatios.index(nu)])
-            l2_3D =  np.linalg.norm(vec - refpolyfem[3 * 98:])
+                linf_2D = np.linalg.norm(vec - refpesopt[thickness.index(h)][poissonRatios.index(nu)], ord = np.inf)
+                linf_3D = np.linalg.norm(vec - refpolyfem[3 * 98:], ord = np.inf)
+                max_disp = np.linalg.norm(vec , ord = np.inf)
 
-            linf_2D = np.linalg.norm(vec - refpesopt[thickness.index(h)][poissonRatios.index(nu)], ord = np.inf)
-            linf_3D = np.linalg.norm(vec - refpolyfem[3 * 98:], ord = np.inf)
-            max_disp = np.linalg.norm(vec , ord = np.inf)
-
-            data = {"name": file2D,
-                    "H": H,
-                    "h": h,
-                    "nu": nu,
-                    "max_disp": max_disp,
-                    "solve_time": solve_time_PESOPT,
-                    "l2_2D": l2_2D,
-                    "l2_3D": l2_3D,
-                    "linf_2D": linf_2D,
-                    "linf_3D": linf_3D,
-                    "l2_3D_mid": l2_3D,
-                    "linf_3D_mid": linf_3D,
-                    "solvec": list(vec)}
-            dict_pesopt.append(data)
+                data = {"name": file2D,
+                        "H": H,
+                        "h": h,
+                        "nu": nu,
+                        "max_disp": max_disp,
+                        "solve_time": solve_time_PESOPT,
+                        "l2_2D": l2_2D,
+                        "l2_3D": l2_3D,
+                        "linf_2D": linf_2D,
+                        "linf_3D": linf_3D,
+                        "l2_3D_mid": l2_3D,
+                        "linf_3D_mid": linf_3D,
+                        "solvec": list(vec)}
+                dict_pesopt.append(data)
+            except IOError:
+                print("Cannot find " + file2D)
 
             for g in outofplaneRes:
                 g_real = h * g

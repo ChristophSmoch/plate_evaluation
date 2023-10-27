@@ -21,12 +21,6 @@ def readFromHdf(filepath, h):
 
         for pidx, pts in enumerate(testpoints):
 
-            have_0 = False
-            have_h = False
-            have_h2 = False
-            
-            # print(pointzz.shape)
-
             p0 = np.array([pts[0],pts[1], 0.])
             ph = np.array([pts[0],pts[1], h])
             ph2 = np.array([pts[0],pts[1], 0.5 * h])
