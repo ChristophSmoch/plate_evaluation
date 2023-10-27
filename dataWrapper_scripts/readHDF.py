@@ -1,5 +1,4 @@
 import numpy as np
-import json
 import h5py
 
 def readFromHdf(filepath, h):
@@ -10,7 +9,9 @@ def readFromHdf(filepath, h):
         a_group_key = list(f.keys())[0]
 
         points = f[a_group_key]['Points']
+        pointzz = np.array(points[:])
         displacement = f[a_group_key]['PointData']["solution"]
+        dispzz = np.array(displacement[:])
         # print(points[:])
 
 
@@ -19,10 +20,11 @@ def readFromHdf(filepath, h):
         has_mid_layer = False
 
         for pidx, pts in enumerate(testpoints):
+
             have_0 = False
             have_h = False
             have_h2 = False
-            pointzz = np.array(points[:])
+            
             # print(pointzz.shape)
 
             p0 = np.array([pts[0],pts[1], 0.])
@@ -33,10 +35,12 @@ def readFromHdf(filepath, h):
             idh = np.where(np.all(pointzz==ph,axis=1))
             idh2 = np.where(np.all(pointzz==ph2,axis=1))
 
-            disp_at_testpoints[pidx][:] = displacement[:][id0[0][0]]
-            disp_at_testpoints[pidx + 49][:] = displacement[:][idh[0][0]]
+            
+            disp_at_testpoints[pidx][:] = dispzz[id0[0][0]]
+            
+            disp_at_testpoints[pidx + 49][:] = dispzz[:][idh[0][0]]
             try:
-                disp_at_testpoints[pidx + 98][:] = displacement[:][idh2[0][0]]
+                disp_at_testpoints[pidx + 98][:] = dispzz[:][idh2[0][0]]
                 has_mid_layer = True
             except IndexError:
                 continue
