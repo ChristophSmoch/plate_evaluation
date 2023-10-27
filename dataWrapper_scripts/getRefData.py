@@ -40,6 +40,7 @@ dict_ref = []
 H = 2.**(-7)
 g = 1.
 for h in thickness:
+    print("h = " + str(h))
     for nu in poissonRatios:
         strnu = str(nu)
         strnu = strnu.replace(".", "")
