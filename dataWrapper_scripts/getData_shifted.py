@@ -8,17 +8,22 @@ def readFromHdf_shifted(filepath, h):
         a_group_key = list(f.keys())[0]
 
         points = f[a_group_key]['Points']
+        pointzz = np.array(points[:])
         displacement = f[a_group_key]['PointData']["solution"]
+        dispzz = np.array(displacement[:])
 
         testpoints = [[1./8. + 1./8. * j, 1./8. + 1./8. * i] for i in range(7) for j in range(7)]
         disp_at_testpoints = np.zeros((49,3))
 
+
         for pidx, pts in enumerate(testpoints):
-            for idx, x in enumerate(points[:]):
-                if x[0] == pts[0] and x[1] == pts[1]:
-                    if x[2] == 0.:
-                        disp_at_testpoints[pidx][:] = displacement[:][idx]
-                        break
+
+            p0 = np.array([pts[0],pts[1], 0.])
+
+            id0 = np.where(np.all(pointzz==p0,axis=1))
+        
+            disp_at_testpoints[pidx][:] = dispzz[id0[0][0]]
+            
         disp_at_testpoints = disp_at_testpoints.reshape(-1)
         return disp_at_testpoints
 
