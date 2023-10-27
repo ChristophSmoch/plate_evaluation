@@ -22,25 +22,22 @@ def readFromHdf(filepath, h):
             have_0 = False
             have_h = False
             have_h2 = False
-            pointzz = np.array(points[:])
-            # print(pointzz.shape)
-
-            p0 = np.array([pts[0],pts[1], 0.])
-            ph = np.array([pts[0],pts[1], h])
-            ph2 = np.array([pts[0],pts[1], 0.5 * h])
-
-            id0 = np.where(np.all(pointzz==p0,axis=1))
-            idh = np.where(np.all(pointzz==ph,axis=1))
-            idh2 = np.where(np.all(pointzz==ph2,axis=1))
-
-            disp_at_testpoints[pidx][:] = displacement[:][id0[0][0]]
-            disp_at_testpoints[pidx + 49][:] = displacement[:][idh[0][0]]
-            try:
-                disp_at_testpoints[pidx + 98][:] = displacement[:][idh2[0][0]]
-                has_mid_layer = True
-            except IndexError:
-                continue
-
+            for idx, x in enumerate(points[:]):
+                if x[0] == pts[0] and x[1] == pts[1]:
+                    if x[2] == 0. and not have_0:
+                        disp_at_testpoints[pidx][:] = displacement[:][idx]
+                        have_0 = True
+            
+                    if x[2] == h and not have_h:
+                        disp_at_testpoints[pidx + 49][:] = displacement[:][idx]
+                        have_h = True
+        
+                    if x[2] == h/2. and not have_h2:
+                        has_mid_layer = True
+                        disp_at_testpoints[pidx + 2 * 49][:] = displacement[:][idx]
+                        have_h2 = True
+                    if have_0 and have_h and have_h2:
+                        break
         if not has_mid_layer:
             for pidx, pts in enumerate(testpoints):
                 disp_at_testpoints[pidx + 98][:] = (disp_at_testpoints[pidx][:] + disp_at_testpoints[pidx + 49][:])/2
