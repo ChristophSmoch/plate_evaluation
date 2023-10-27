@@ -14,13 +14,13 @@ with open("specs.json", "r") as f:
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_factor = [5 + 5 * i for i in range(shift_bounds)]
+shift_angle = [5 + 5 * i for i in range(shift_bounds)]
 
 
 for H in inplaneRes:
     for h in thickness:
         for g in outofplaneRes:
-            for alpha in shift_factor:
+            for alpha in shift_angle:
                 file3D = "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_hexahedral_shift" + str(alpha) 
                 n_nodes = int( (1 / H + 1)**2) * (g + 1)
                 print(n_nodes)

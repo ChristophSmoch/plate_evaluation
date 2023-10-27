@@ -1,5 +1,27 @@
 import numpy as np
 import json
+import h5py
+
+
+def readFromHdf_shifted(filepath, h):
+    with h5py.File(filepath, "r+") as f:
+        a_group_key = list(f.keys())[0]
+
+        points = f[a_group_key]['Points']
+        displacement = f[a_group_key]['PointData']["solution"]
+
+        testpoints = [[1./8. + 1./8. * j, 1./8. + 1./8. * i] for i in range(7) for j in range(7)]
+        disp_at_testpoints = np.zeros((49,3))
+
+        for pidx, pts in enumerate(testpoints):
+            for idx, x in enumerate(points[:]):
+                if x[0] == pts[0] and x[1] == pts[1]:
+                    if x[2] == 0.:
+                        disp_at_testpoints[pidx][:] = displacement[:][idx]
+                        break
+        disp_at_testpoints = disp_at_testpoints.reshape(-1)
+        return disp_at_testpoints
+
 
 with open("specs.json", "r") as f:
     specs = json.load(f)
@@ -13,7 +35,7 @@ with open("specs.json", "r") as f:
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_factor = [2.**( - i ) for i in range(shift_bounds[0], shift_bounds[1])]
+shift_angle = [5 + 5 * i for i in range(shift_bounds)]
 
 poissonRatios = [0.0] 
 
@@ -25,10 +47,23 @@ for H in inplaneRes:
             strnu = strnu.replace(".", "")
 
             for g in outofplaneRes:
-                for s in shift_factor:
+                for alpha in shift_angle:
                     try:
-                        print("H = " + str(H))
-                        file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s)))
+                        file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
+                        
+                        vec = readFromHdf_shifted("resultsPolyFEM_hexahedral/" + file3D + "/result.hdf", h)
+
+                        refvec = []
+                        with open("polyfem_ref_data.json", "r") as f:
+                            refdata = json.load(f)
+                            for d in refdata:
+                                if d["h"] == h and d["nu"] == nu:
+                                    refvec = d["solvec"]
+                                    break
+                        refpolyfem = np.array(refvec)
+
+                        l2_3D =  np.linalg.norm(vec - refpolyfem[:3 * 49])
+                        
                         with open("resultsPolyFEM_hexahedral/" + file3D + "/stats.json", "r") as f:
                             data = json.load(f)
                             solve_time_PolyFEM = data["time_solving"]
@@ -39,10 +74,11 @@ for H in inplaneRes:
                             "h": h,
                             "g": g,
                             "nu": nu,
+                            "l2_3D": l2_3D,
                             "max_disp": max_disp,
                             "solve_time": solve_time_PolyFEM,
-                            "shift": s * H / np.sqrt(2),
-                            "shift_angle": np.math.atan(s*H/(h * np.sqrt(2))) / (2*np.math.pi) * 360
+                            "shift": h * np.tan(alpha),
+                            "shift_angle": alpha
                         }
                         dict_polyfem.append(data)
                     except IOError:

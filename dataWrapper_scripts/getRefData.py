@@ -37,7 +37,7 @@ npts_sqrt = 7
 
 dict_ref = []
 
-H = 2.**(-5)
+H = 2.**(-7)
 for h in thickness:
     for nu in poissonRatios:
         strnu = str(nu)

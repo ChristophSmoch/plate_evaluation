@@ -13,7 +13,7 @@ with open("specs.json", "r") as f:
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_factor = [2.**( - i ) for i in range(shift_bounds[0], shift_bounds[1])]
+shift_angle = [5 + 5 * i for i in range(shift_bounds)]
 
 poissonRatios = [0.0] 
 
@@ -23,7 +23,7 @@ for H in inplaneRes:
         for g in outofplaneRes:
             g_real = h * g
             for nu in poissonRatios:
-                for s in shift_factor:
+                for alpha in shift_angle:
                     strnu = str(nu)
                     strnu = strnu.replace(".", "")
                     file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
@@ -32,7 +32,7 @@ for H in inplaneRes:
                             "advanced": {
                                 "normalize_mesh": False
                             },
-                            "mesh": "meshes/" + file3D + "_hexahedral_shift2-" + str(int(-np.log2(s))) + ".msh",
+                            "mesh": "meshes/" + file3D + "_hexahedral_shift" + str(alpha) + ".msh",
                             "surface_selection": {
                                 "threshold": 1e-07
                             }
@@ -61,15 +61,15 @@ for H in inplaneRes:
                             }]
                             },
                         "output": {
-                            "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s))) + "/stats.json",
+                            "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/stats.json",
                             "data": {
-                                "nodes": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s))) + "/nodes.txt",
-                                "solution": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s))) + "/sol.txt",
+                                "nodes": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/nodes.txt",
+                                "solution": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/sol.txt",
                                 "advanced": {
                                     "reorder_nodes": True
                                 }
                             },
-                            "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s))) + "/result.vtu",
+                            "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2" + str(alpha) + "/result.vtu",
                                     "high_order_mesh": False,
                                      "options": {
                                          "use_hdf5" : True
