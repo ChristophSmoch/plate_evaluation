@@ -1,0 +1,5 @@
+meshes/
+json/
+resultsPolyFEM_hexahedral/
+resultsPolyFEM_tetrahedral/
+nohup*
