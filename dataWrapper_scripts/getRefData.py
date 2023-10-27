@@ -38,32 +38,30 @@ npts_sqrt = 7
 dict_ref = []
 
 H = 2.**(-7)
+g = 1.
 for h in thickness:
     for nu in poissonRatios:
         strnu = str(nu)
         strnu = strnu.replace(".", "")
-        
-        for g in outofplaneRes:
-            g_real = h * g
-            try:
-                file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_tetrahedral_quartic"
-                with open("resultsPolyFEM_tetrahedral/" + file3D + "/stats.json", "r") as f:
-                    data = json.load(f)
-                    solve_time_PolyFEM = data["time_solving"]
-                    max_disp = data["err_linf"]
-                vec = getpolyfem_tetrahedral_Vectors(file3D, H, h, g, nu)
+        try:
+            file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_tetrahedral_quartic"
+            with open("resultsPolyFEM_tetrahedral/" + file3D + "/stats.json", "r") as f:
+                data = json.load(f)
+                solve_time_PolyFEM = data["time_solving"]
+                max_disp = data["err_linf"]
+            vec = getpolyfem_tetrahedral_Vectors(file3D, H, h, g, nu)
 
-                data = {"name": file3D,
-                    "H": H,
-                    "h": h,
-                    "g": g,
-                    "nu": nu,
-                    "max_disp": max_disp,
-                    "solve_time": solve_time_PolyFEM,
-                    "solvec": list(vec)}
-                dict_ref.append(data)
-            except IOError:
-                print("Cannot find " + file3D)
+            data = {"name": file3D,
+                "H": H,
+                "h": h,
+                "g": g,
+                "nu": nu,
+                "max_disp": max_disp,
+                "solve_time": solve_time_PolyFEM,
+                "solvec": list(vec)}
+            dict_ref.append(data)
+        except IOError:
+            print("Cannot find " + file3D)
 
         
                     
