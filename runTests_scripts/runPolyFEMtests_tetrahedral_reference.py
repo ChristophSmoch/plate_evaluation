@@ -23,9 +23,9 @@ for H in inplaneRes:
                 strnu = strnu.replace(".", "")
                 file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
 
-                popen = subprocess.Popen("mkdir resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic", stdout = subprocess.PIPE, shell = True )
+                popen = subprocess.Popen("mkdir resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_reference", stdout = subprocess.PIPE, shell = True )
                 popen.wait()
-                popen = subprocess.Popen(path_to_polyfem_bin + " -j json/run_" + file3D + "_nu" + strnu + "_tetrahedral_quartic.json", stdout = subprocess.PIPE, shell = True )
+                popen = subprocess.Popen(path_to_polyfem_bin + " -j json/run_" + file3D + "_nu" + strnu + "_tetrahedral_reference.json", stdout = subprocess.PIPE, shell = True )
                 popen.wait()
                 output = popen.stdout.read()
                 print( output )

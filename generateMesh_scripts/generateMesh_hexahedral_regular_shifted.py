@@ -1,6 +1,6 @@
-import subprocess
 import numpy as np
 import json
+import random
 
 with open("specs.json", "r") as f:
     specs = json.load(f)
@@ -9,19 +9,22 @@ with open("specs.json", "r") as f:
     thickness_bounds = specs["thickness_bounds"]
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
-    shift_bounds = specs["shift_bounds"]
+    shift_angles = specs["shift"]["shift_angles"]
+    randomshift = specs["shift"]["randomshift"]
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_angle = [5 + 5 * i for i in range(shift_bounds)]
 
 
 for H in inplaneRes:
     for h in thickness:
         for g in outofplaneRes:
-            for alpha in shift_angle:
+            for alpha in shift_angles:
                 file3D = "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_hexahedral_shift" + str(alpha) 
+                if randomshift:
+                    file3D += "_random"
+                print(file3D)
                 n_nodes = int( (1 / H + 1)**2) * (g + 1)
                 print(n_nodes)
                 n_elems = int(1/H**2 * g)
@@ -36,7 +39,10 @@ for H in inplaneRes:
                             for j in range(int(1 / H ) + 1 ):
                                 node_nr = j + int( 1 / H + 1 ) * i +  int( 1 / H + 1 )**2 * k + 1
                                 if k == 1 and H * j != 0 and H * j != 1 and H * i != 0 and H * i != 1:
-                                    f.write(str(node_nr) + " " + str(H * j + h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str( H * i + h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str ( k * h / g) + "\n")
+                                    if not randomshift:
+                                        f.write(str(node_nr) + " " + str(H * j + h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str( H * i + h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str ( k * h / g) + "\n")
+                                    else:
+                                        f.write(str(node_nr) + " " + str(H * j + 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str( H * i + 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)) + " " + str ( k * h / g) + "\n")
                                 else:
                                     f.write(str(node_nr) + " " + str(H * j) + " " + str( H * i ) + " " + str ( k * h / g) + "\n")
 

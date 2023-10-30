@@ -10,7 +10,7 @@ with open("specs.json", "r") as f:
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1] ) ]
+outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1] ) ]
 poissonRatios = [0.0] 
 
 
@@ -26,7 +26,7 @@ for H in inplaneRes:
                         "advanced": {
                             "normalize_mesh": False
                         },
-                        "mesh": "meshes/" + file3D + "_tetrahedral.msh",
+                        "mesh": "meshes/" + file3D + "_prism.msh",
                         "surface_selection": {
                             "threshold": 1e-07
                         }
@@ -55,21 +55,22 @@ for H in inplaneRes:
                         }]
                         },
                     "output": {
-                        "json": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/stats.json",
+                        "json": "resultsPolyFEM_prism/" + file3D + "_nu" + strnu + "_prism/stats.json",
                         "data": {
-                            "solution": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/sol.txt",
+                            "nodes": "resultsPolyFEM_prism/" + file3D + "_nu" + strnu + "_prism/nodes.txt",
+                            "solution": "resultsPolyFEM_prism/" + file3D + "_nu" + strnu + "_prism/sol.txt",
                             "advanced": {
                                 "reorder_nodes": True
                             }
                         },
-                        "paraview": { "file_name": "resultsPolyFEM_tetrahedral/" + file3D + "_nu" + strnu + "_tetrahedral_quartic/result.vtu",
+                        "paraview": {"file_name": "resultsPolyFEM_prism/" + file3D + "_nu" + strnu + "_prism/result.vtu",
+                        		"high_order_mesh": False,
                                      "options": {
                                          "use_hdf5" : True
-                                     }
-                        }
+                                     }}
                     },
                     "space": {
-                        "discr_order": 4
+                        "discr_order": 2
                     },
                     "solver": {
                         "linear": {
@@ -81,5 +82,5 @@ for H in inplaneRes:
                 json_object = json.dumps(dictionary)
  
                 # Writing to sample.json
-                with open("json/run_" + file3D + "_nu" + strnu + "_tetrahedral_quartic.json", "w") as outfile:
+                with open("json/run_" + file3D + "_nu" + strnu + "_prism.json", "w") as outfile:
                     outfile.write(json_object)

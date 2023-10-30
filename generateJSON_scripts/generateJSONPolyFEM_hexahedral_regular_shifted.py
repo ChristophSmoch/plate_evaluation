@@ -8,12 +8,13 @@ with open("specs.json", "r") as f:
     thickness_bounds = specs["thickness_bounds"]
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
-    shift_bounds = specs["shift_bounds"]
+    shift_angles = specs["shift"]["shift_angles"]
+    randomshift = specs["shift"]["randomshift"]
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_angle = [5 + 5 * i for i in range(shift_bounds)]
+
 
 poissonRatios = [0.0] 
 
@@ -23,16 +24,22 @@ for H in inplaneRes:
         for g in outofplaneRes:
             g_real = h * g
             for nu in poissonRatios:
-                for alpha in shift_angle:
+                for alpha in shift_angles:
                     strnu = str(nu)
                     strnu = strnu.replace(".", "")
-                    file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
+                    basefile3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))
+                    meshfile3D = basefile3D + "_hexahedral_shift" + str(alpha)
+                    file3D = basefile3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
+
+                    if randomshift:
+                        meshfile3D += "_random"
+                        file3D += "_random"
                     dictionary = {
                         "geometry": {
                             "advanced": {
                                 "normalize_mesh": False
                             },
-                            "mesh": "meshes/" + file3D + "_hexahedral_shift" + str(alpha) + ".msh",
+                            "mesh": "meshes/" + meshfile3D + ".msh",
                             "surface_selection": {
                                 "threshold": 1e-07
                             }
@@ -61,15 +68,15 @@ for H in inplaneRes:
                             }]
                             },
                         "output": {
-                            "json": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/stats.json",
+                            "json": "resultsPolyFEM_hexahedral/" + file3D + "/stats.json",
                             "data": {
-                                "nodes": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/nodes.txt",
-                                "solution": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha) + "/sol.txt",
+                                "nodes": "resultsPolyFEM_hexahedral/" + file3D + "/nodes.txt",
+                                "solution": "resultsPolyFEM_hexahedral/" + file3D + "/sol.txt",
                                 "advanced": {
                                     "reorder_nodes": True
                                 }
                             },
-                            "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "_nu" + strnu + "_hexahedral_shift2" + str(alpha) + "/result.vtu",
+                            "paraview": {"file_name": "resultsPolyFEM_hexahedral/" + file3D + "/result.vtu",
                                     "high_order_mesh": False,
                                      "options": {
                                          "use_hdf5" : True
@@ -88,5 +95,5 @@ for H in inplaneRes:
                     json_object = json.dumps(dictionary)
     
                     # Writing to sample.json
-                    with open("json/run_" + file3D + "_nu" + strnu + "_hexahedral_shift2-" + str(int(-np.log2(s))) + ".json", "w") as outfile:
+                    with open("json/run_" + file3D + ".json", "w") as outfile:
                         outfile.write(json_object)
