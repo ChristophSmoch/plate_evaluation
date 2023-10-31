@@ -102,6 +102,7 @@ refpesopt, refpolyfem = refSols()
 dict_pesopt = []
 dict_polyfem_tet = []
 dict_polyfem_hex = []
+dict_polyfem_prism = []
 for H in inplaneRes:
     for h in thickness:
         for nu in poissonRatios:
@@ -153,7 +154,7 @@ for H in inplaneRes:
             for g in outofplaneRes:
                 g_real = h * g
                 try:
-                    print("H = " + str(H))
+                    print("tet")
                     file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_tetrahedral"
                     with open("resultsPolyFEM_tetrahedral/" + file3D + "/stats.json", "r") as f:
                         data = json.load(f)
@@ -190,7 +191,7 @@ for H in inplaneRes:
                     print("Cannot find " + file3D)
 
                 try:
-                    print("H = " + str(H))
+                    print("hex")
                     file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral"
                     with open("resultsPolyFEM_hexahedral/" + file3D + "/stats.json", "r") as f:
                         data = json.load(f)
@@ -225,16 +226,56 @@ for H in inplaneRes:
                     dict_polyfem_hex.append(data)
                 except IOError:
                     print("Cannot find " + file3D)
+                
+                try:
+                    print("prism")
+                    file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_prism"
+                    with open("resultsPolyFEM_prism/" + file3D + "/stats.json", "r") as f:
+                        data = json.load(f)
+                        solve_time_PolyFEM = data["time_solving"]
+                        max_disp = data["err_linf"]
+                    vec = getpolyfem_hexahedral_Vectors(H, h, g, nu)
+                    l2_2D =  np.linalg.norm(vec[3 * 2 * 49:] - refpesopt[thickness.index(h)][poissonRatios.index(nu)])
+                    l2_3D =  np.linalg.norm(vec - refpolyfem) / 3.
+
+                    linf_2D =  np.linalg.norm(vec[3 * 2 * 49:] - refpesopt[thickness.index(h)][poissonRatios.index(nu)], ord = np.inf)
+                    linf_3D =  np.linalg.norm(vec - refpolyfem, ord = np.inf)
+
+                    l2_3D_mid =  np.linalg.norm(vec[3 * 2 * 49:] - refpolyfem[3 * 2 * 49:]) / 3.
+                    linf_3D_mid =  np.linalg.norm(vec[3 * 2 * 49:] - refpolyfem[3 * 2 * 49:], ord = np.inf)
+
+                    
+
+                    data = {"name": file3D,
+                        "H": H,
+                        "h": h,
+                        "g": g,
+                        "nu": nu,
+                        "max_disp": max_disp,
+                        "solve_time": solve_time_PolyFEM,
+                        "l2_2D": l2_2D,
+                        "l2_3D": l2_3D,
+                        "linf_2D": linf_2D,
+                        "linf_3D": linf_3D,
+                        "l2_3D_mid": l2_3D_mid,
+                        "linf_3D_mid": linf_3D_mid,
+                        "solvec": list(vec)}
+                    dict_polyfem_prism.append(data)
+                except IOError:
+                    print("Cannot find " + file3D)
                     
 
 polyfem_tet_json = json.dumps(dict_polyfem_tet)
 polyfem_hex_json = json.dumps(dict_polyfem_hex)
+polyfem_prism_json = json.dumps(dict_polyfem_prism)
 pesoptjson = json.dumps(dict_pesopt)
 
 with open("polyfem_tet_data.json", "w") as outfile:
     outfile.write(polyfem_tet_json)
 with open("polyfem_hex_data.json", "w") as outfile:
     outfile.write(polyfem_hex_json)
+with open("polyfem_prism_data.json", "w") as outfile:
+    outfile.write(polyfem_prism_json)
 with open("pesopt_data.json", "w") as outfile:
     outfile.write(pesoptjson)
  

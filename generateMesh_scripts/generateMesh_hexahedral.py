@@ -11,7 +11,7 @@ with open("specs.json", "r") as f:
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
-outofplaneRes = [ 2.**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1]) ]
+outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0], outofplaneRes_bounds[1]) ]
 
 npts_sqrt = 7
 coord = 1. / (npts_sqrt + 1.)
@@ -23,7 +23,7 @@ for H in inplaneRes:
             with open( "meshes/" + file3D + ".geo", "w" ) as f:
                 f.write("H = " + str(H) + ";\n")
                 f.write("h = " + str(h) + ";\n")
-                f.write("g = " + str(int(1/g)) + ";\n" )
+                f.write("g = " + str(g) + ";\n" )
                 
                 f.write("Point(1) = {0.,0.,0., H};\n")
                 f.write("Point(2) = {1.,0.,0., H};\n")
