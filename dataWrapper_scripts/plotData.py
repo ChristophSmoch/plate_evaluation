@@ -119,7 +119,7 @@ if __name__ == "__main__":
     outofplaneRes_div =  [2**(i) for i in range(3)]
     # outofplaneRes_div.append(2**(-i) for i in range(4))
     # print(outofplaneRes_div)
-    inplaneRes = [2**(-i) for i in range(4,9)]
+    inplaneRes = [2**(-i) for i in range(4,10)]
 
     fig = go.Figure()
     if x_key == "h":
