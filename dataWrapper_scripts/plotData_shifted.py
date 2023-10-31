@@ -9,12 +9,10 @@ with open("specs.json", "r") as f:
     thickness_bounds = specs["thickness_bounds"]
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
-    shift_bounds = specs["shift_bounds"]
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_factor = [2.**( - i ) for i in range(shift_bounds[0], shift_bounds[1])]
 
 poissonRatios = [0.0] 
 
@@ -41,31 +39,31 @@ def accumulate_data_polyfem_base(data_list, x_key, y_key):
     return x_values_all, y_values_all, names_all                
 
 if __name__ == "__main__":
-    file_path1 = 'polyfem_hexahedral_shifted_data.json'
+    file_path1 = 'polyfem_hexahedral_regular_shifted_data.json'
+    file_path2 = 'polyfem_hexahedral_regular_data.json'
 
 
     x_key = input("Enter key for x-axis data: ")
     y_key = input("Enter key for y-axis data: ")
 
-    data_list = load_data_from_json(file_path1)
+    data_list1 = load_data_from_json(file_path1)
+    data_list2 = load_data_from_json(file_path2)
 
     
-    x_values1, y_values1, name1 = accumulate_data_polyfem_base(data_list, x_key, y_key)
+    x_values1, y_values1, name1 = accumulate_data_polyfem_base(data_list1, x_key, y_key)
+    x_values2, y_values2, name2 = accumulate_data_polyfem_base(data_list2, x_key, y_key)
 
-    refy = 0.0013787675005053346 * np.ones(len(y_values1))
-    tety = 7.11187166703974e-08 * np.ones(len(y_values1))
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x_values1, y=y_values1, mode= 'lines+markers',
-                                    name=name1[0] , text=name1[0], marker=dict(size=10)))
-    fig.add_trace(go.Scatter(x=x_values1, y=refy, mode= 'lines',
-                                    name="no shift" , text="no shift", marker=dict(size=10)))
-    fig.add_trace(go.Scatter(x=x_values1, y=tety, mode= 'lines',
-                                    name="tets" , text="tets", marker=dict(size=10)))
+                                    name="shift" , text="shift", marker=dict(size=10)))
+    fig.add_trace(go.Scatter(x=x_values2, y=y_values2, mode= 'lines+markers',
+                                    name="reg" , text="reg", marker=dict(size=10)))
+
     
     
     
     
-    fig.update_layout(title='H=2^-5, thickness = 2^-13, x-axis: angle of shift to normal (in degree)',
+    fig.update_layout(title='regular vs shift',
                     xaxis_title=x_key,
                     yaxis_title=y_key,
                     hovermode='closest',

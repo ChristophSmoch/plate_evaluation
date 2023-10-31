@@ -63,6 +63,13 @@ def getpolyfem_hexahedral_Vectors(H, h, g, nu):
     points = readFromHdf("resultsPolyFEM_hexahedral/" + file3D + "/result.hdf", h)
     return(points)
 
+def getpolyfem_prism_Vectors(H, h, g, nu):
+    strnu = str(nu)
+    strnu = strnu.replace(".", "")
+    g_real = h * g
+    file3D = "pointplate3D_h2-" + str(int(-np.log2(h)))+  "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g)))  + "_nu" + strnu + "_prism"
+    points = readFromHdf("resultsPolyFEM_prism/" + file3D + "/result.hdf", h)
+    return(points)
 
 npts_sqrt = 7
 def refSols():            
@@ -234,7 +241,7 @@ for H in inplaneRes:
                         data = json.load(f)
                         solve_time_PolyFEM = data["time_solving"]
                         max_disp = data["err_linf"]
-                    vec = getpolyfem_hexahedral_Vectors(H, h, g, nu)
+                    vec = getpolyfem_prism_Vectors(H, h, g, nu)
                     l2_2D =  np.linalg.norm(vec[3 * 2 * 49:] - refpesopt[thickness.index(h)][poissonRatios.index(nu)])
                     l2_3D =  np.linalg.norm(vec - refpolyfem) / 3.
 
