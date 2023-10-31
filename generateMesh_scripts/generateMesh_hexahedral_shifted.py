@@ -24,19 +24,21 @@ for H in inplaneRes:
         for g in outofplaneRes:
             for alpha in shift_angles:
                 file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_hexahedral"
-                shiftfile3D = file3D + "_shifted" + str(alpha)
+                shiftfile3D = file3D + "_shift" + str(alpha)
                 if randomshift:
                     shiftfile3D += "_random"
                 with open( "meshes/" + file3D + ".msh", "r" ) as f:
                     with open( "meshes/" + shiftfile3D + ".msh", "w" ) as g:
                         nodes = False
                         for line in f:
+                            
                             if line.startswith("$Nodes"):
                                 nodes = True
                             if line.startswith("$EndNodes"):
                                 nodes = False
                             if not nodes:
                                 g.write(line)
+                                
                             else:
                                 line = line.strip()
                                 point = line.split(" ")
@@ -54,6 +56,7 @@ for H in inplaneRes:
                                             y +=  h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
                                         line = str(x) + " " + str(y) + " " + str(z)
                                 g.write(line + "\n")
+
                                 
                         
                         

@@ -35,16 +35,17 @@ with open("specs.json", "r") as f:
     thickness_bounds = specs["thickness_bounds"]
     inplaneRes_bounds = specs["inplaneRes_bounds"]
     outofplaneRes_bounds = specs["outofplaneRes_bounds"]
-    shift_bounds = specs["shift_bounds"]
+    shift_angles = specs["shift"]["shift_angles"]
+    randomshift = specs["shift"]["randomshift"]
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
 inplaneRes = [ 2.**( -i ) for i in range(inplaneRes_bounds[0], inplaneRes_bounds[1] ) ]
 outofplaneRes = [ 2**( i ) for i in range(outofplaneRes_bounds[0] , outofplaneRes_bounds[1]  ) ]
-shift_angle = [5 + 5 * i for i in range(shift_bounds)]
 
 poissonRatios = [0.0] 
 
-dict_polyfem = []
+dict_reg = []
+dict_reg_shift = []
 for H in inplaneRes:
     for h in thickness:
         for nu in poissonRatios:
@@ -52,10 +53,12 @@ for H in inplaneRes:
             strnu = strnu.replace(".", "")
 
             for g in outofplaneRes:
-                for alpha in shift_angle:
+                for alpha in shift_angles:
                     try:
                         file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
-                        
+                        if randomshift:
+                            file3D += "_random"
+
                         vec = readFromHdf_shifted("resultsPolyFEM_hexahedral/" + file3D + "/result.hdf", h)
 
                         refvec = []
@@ -85,14 +88,52 @@ for H in inplaneRes:
                             "shift": h * np.tan(alpha),
                             "shift_angle": alpha
                         }
-                        dict_polyfem.append(data)
+                        dict_reg_shift.append(data)
                     except IOError:
                         print("Cannot find " + file3D)
+                    try:
+                        file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral"
+
+                        vec = readFromHdf_shifted("resultsPolyFEM_hexahedral/" + file3D + "/result.hdf", h)
+
+                        refvec = []
+                        with open("polyfem_ref_data.json", "r") as f:
+                            refdata = json.load(f)
+                            for d in refdata:
+                                if d["h"] == h and d["nu"] == nu:
+                                    refvec = d["solvec"]
+                                    break
+                        refpolyfem = np.array(refvec)
+
+                        l2_3D =  np.linalg.norm(vec - refpolyfem[:3 * 49])
                         
+                        with open("resultsPolyFEM_hexahedral/" + file3D + "/stats.json", "r") as f:
+                            data = json.load(f)
+                            solve_time_PolyFEM = data["time_solving"]
+                            max_disp = data["err_linf"]
 
-polyfemjson = json.dumps(dict_polyfem)
+                        data = {"name": file3D,
+                            "H": H,
+                            "h": h,
+                            "g": g,
+                            "nu": nu,
+                            "l2_3D": l2_3D,
+                            "max_disp": max_disp,
+                            "solve_time": solve_time_PolyFEM,
+                            "shift": h * np.tan(alpha),
+                            "shift_angle": alpha
+                        }
+                        dict_reg.append(data)
+                    except IOError:
+                        print("Cannot find " + file3D)
+                    
 
-with open("polyfem_hexahedral_shifted_data.json", "w") as outfile:
-    outfile.write(polyfemjson)
+regshiftjson = json.dumps(dict_reg_shift)
+regjson = json.dumps(dict_reg)
+
+with open("polyfem_hexahedral_regular_shifted_data.json", "w") as outfile:
+    outfile.write(regshiftjson)
+with open("polyfem_hexahedral_regular_data.json", "w") as outfile:
+    outfile.write(regjson)
 
  
