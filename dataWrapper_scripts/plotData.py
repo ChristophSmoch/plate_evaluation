@@ -195,7 +195,17 @@ if __name__ == "__main__":
                                             name="polyfem_hex_h=2^-" + str(int(-np.log2(h))) + "_g=" + str(g), text="polyfem_hex_h=2^-" + str(int(-np.log2(h))) + "_g=" + str(g), marker=dict(size=10)))
                         
                 except KeyError:
-                    continue
+                    print("KeyError")
+                try:
+                    x_values4, y_values4, name4 = accumulate_data_polyfem(data_list4, x_key, y_key,"h", h, "g", g)
+
+                    if(len(x_values4) >=1):
+
+                        fig.add_trace(go.Scatter(x=x_values4, y=y_values4, mode= 'lines+markers',
+                                            name="polyfem_prism_h=2^-" + str(int(-np.log2(h))) + "_g=" + str(g), text="polyfem_prism_h=2^-" + str(int(-np.log2(h))) + "_g=" + str(g), marker=dict(size=10)))
+                        
+                except KeyError:
+                    print("KeyError")
                 fig.update_xaxes(type = 'log')
 
     fig.update_layout(title='Interactive Data Plot',
