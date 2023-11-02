@@ -50,16 +50,28 @@ if __name__ == "__main__":
     data_list2 = load_data_from_json(file_path2)
 
     inplaneRes = [2.**(-i) for i in range(5,8)]
+    thickness = [2.**(-i) for i in range(6,14)]
+    fig = go.Figure()
     if x_key == "h":
         for H in inplaneRes:
             x_values1, y_values1, name1 = accumulate_data_polyfem(data_list1, x_key, y_key, "H", H)
             x_values2, y_values2, name2 = accumulate_data_polyfem(data_list2, x_key, y_key, "H", H)
 
-            fig = go.Figure()
+            
             fig.add_trace(go.Scatter(x=x_values1, y=y_values1, mode= 'lines+markers',
                                             name="shift_H=2^" + str(np.log2(H)) , text="shift_H=2^" + str(np.log2(H)) , marker=dict(size=10)))
             fig.add_trace(go.Scatter(x=x_values2, y=y_values2, mode= 'lines+markers',
                                             name="reg_H=2^" + str(np.log2(H))  , text="reg_H=2^" + str(np.log2(H)) , marker=dict(size=10)))
+    if x_key == "H":
+        for h in thickness:
+            x_values1, y_values1, name1 = accumulate_data_polyfem(data_list1, x_key, y_key, "h", h)
+            x_values2, y_values2, name2 = accumulate_data_polyfem(data_list2, x_key, y_key, "h", h)
+
+            
+            fig.add_trace(go.Scatter(x=x_values1, y=y_values1, mode= 'lines+markers',
+                                            name="shift_h=2^" + str(np.log2(h)) , text="shift_h=2^" + str(np.log2(h)) , marker=dict(size=10)))
+            fig.add_trace(go.Scatter(x=x_values2, y=y_values2, mode= 'lines+markers',
+                                            name="reg_h=2^" + str(np.log2(h))  , text="reg_h=2^" + str(np.log2(h)) , marker=dict(size=10)))
 
     
     
