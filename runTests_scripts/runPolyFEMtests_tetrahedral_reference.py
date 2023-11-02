@@ -11,8 +11,8 @@ with open("specs.json", "r") as f:
     poissonRatios = specs["poissonRatios"]
 
 thickness = [ 2.**( - i ) for i in range( thickness_bounds[0], thickness_bounds[1] ) ]
-inplaneRes = [ 2.**( -8 ) ]
-outofplaneRes = [ 2.**( 0 )  ]
+inplaneRes = [ 2.**( -9 ) ]
+outofplaneRes = [ 2**( 2 )  ]
 
 for H in inplaneRes:
     for h in thickness:
