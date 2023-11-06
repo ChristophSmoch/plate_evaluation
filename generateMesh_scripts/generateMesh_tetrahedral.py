@@ -19,7 +19,7 @@ coord = 1. / (npts_sqrt + 1.)
 for H in inplaneRes:
     for h in thickness:
         for g in outofplaneRes:
-            file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(-np.log2(g))) + "_tetrahedral"
+            file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_tetrahedral"
             with open( "meshes/" + file3D + ".geo", "w" ) as f:
                 f.write("H = " + str(H) + ";\n")
                 f.write("h = " + str(h) + ";\n")
