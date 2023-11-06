@@ -114,7 +114,7 @@ if __name__ == "__main__":
     data_list3 = load_data_from_json(file_path3)
     data_list4 = load_data_from_json(file_path4)
 
-    thickness = [2**(-i) for i in range(6,14)]
+    thickness = [2**(-i) for i in range(6,7)]
     outofplaneRes = [2**(-i) for i in range( 15)]
     outofplaneRes_div =  [2**(i) for i in range(3)]
     # outofplaneRes_div.append(2**(-i) for i in range(4))
