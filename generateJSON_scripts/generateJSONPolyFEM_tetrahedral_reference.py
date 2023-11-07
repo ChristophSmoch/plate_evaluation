@@ -75,9 +75,7 @@ for H in inplaneRes:
                         "linear": {
                             "solver": "Hypre"
                         },
-                        "advanced": {
-                            "cache_size": 90000000
-                        }
+                        "max_threads": 16
                     }
                 }
                 # Serializing json
