@@ -55,7 +55,7 @@ for H in inplaneRes:
             for g in outofplaneRes:
                 for alpha in shift_angles:
                     try:
-                        file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
+                        file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
                         if randomshift:
                             file3D += "_random"
 
@@ -70,7 +70,7 @@ for H in inplaneRes:
                                     break
                         refpolyfem = np.array(refvec)
 
-                        l2_3D =  np.linalg.norm(vec - refpolyfem[:3 * 49])
+                        l2_3D_mid =  np.linalg.norm(vec - refpolyfem[:3 * 49])
                         
                         with open("resultsPolyFEM_hexahedral/" + file3D + "/stats.json", "r") as f:
                             data = json.load(f)
@@ -82,7 +82,7 @@ for H in inplaneRes:
                             "h": h,
                             "g": g,
                             "nu": nu,
-                            "l2_3D": l2_3D,
+                            "l2_3D_mid": l2_3D_mid,
                             "max_disp": max_disp,
                             "solve_time": solve_time_PolyFEM,
                             "shift": h * np.tan(alpha),
@@ -92,7 +92,7 @@ for H in inplaneRes:
                     except IOError:
                         print("Cannot find " + file3D)
                     try:
-                        file3D =  "regularplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral"
+                        file3D =  "pointplate3D_h2-" + str(int(-np.log2(h))) + "_H2-" + str(int(-np.log2(H))) + "_g2+" + str(int(np.log2(g))) + "_nu" + strnu + "_hexahedral"
 
                         vec = readFromHdf_shifted("resultsPolyFEM_hexahedral/" + file3D + "/result.hdf", h)
 
@@ -105,7 +105,7 @@ for H in inplaneRes:
                                     break
                         refpolyfem = np.array(refvec)
 
-                        l2_3D =  np.linalg.norm(vec - refpolyfem[:3 * 49])
+                        l2_3D_mid =  np.linalg.norm(vec - refpolyfem[:3 * 49])
                         
                         with open("resultsPolyFEM_hexahedral/" + file3D + "/stats.json", "r") as f:
                             data = json.load(f)
@@ -117,7 +117,7 @@ for H in inplaneRes:
                             "h": h,
                             "g": g,
                             "nu": nu,
-                            "l2_3D": l2_3D,
+                            "l2_3D_mid": l2_3D_mid,
                             "max_disp": max_disp,
                             "solve_time": solve_time_PolyFEM,
                             "shift": h * np.tan(alpha),
