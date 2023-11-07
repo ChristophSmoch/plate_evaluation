@@ -29,6 +29,7 @@ for H in inplaneRes:
                     file3D = basefile3D + "_nu" + strnu + "_hexahedral_shift" + str(alpha)
                     if randomshift:
                         file3D += "_random"
+                    print(file3D)
                     popen = subprocess.Popen("mkdir resultsPolyFEM_hexahedral/" + file3D , stdout = subprocess.PIPE, shell = True )
                     popen.wait()
                     popen = subprocess.Popen(path_to_polyfem_bin + " -j json/run_" + file3D + ".json", stdout = subprocess.PIPE, shell = True )
