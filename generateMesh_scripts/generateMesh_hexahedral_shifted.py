@@ -30,32 +30,40 @@ for H in inplaneRes:
                 with open( "meshes/" + file3D + ".msh", "r" ) as f:
                     with open( "meshes/" + shiftfile3D + ".msh", "w" ) as g:
                         nodes = False
+                        entities = False
                         for line in f:
+                            if line.startswith("$Entities"):
+                                entities = True
                             
                             if line.startswith("$Nodes"):
                                 nodes = True
                             if line.startswith("$EndNodes"):
                                 nodes = False
-                            if not nodes:
-                                g.write(line)
-                                
-                            else:
-                                line = line.strip()
-                                point = line.split(" ")
-                                if len(point) == 3:
-                                    x = float(point[0])
-                                    y = float(point[1])
-                                    z = float(point[2])
-                                    if z == h and x!= 0. and x != 1. and y != 0. and y != 1.:
-                                        if randomshift:
-                                            x += 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
-                                            y += 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
+                            
+                            if not entities:
+                                if not nodes:
+                                    g.write(line)
+                                    
+                                else:
+                                    line = line.strip()
+                                    point = line.split(" ")
+                                    if len(point) == 3:
+                                        x = float(point[0])
+                                        y = float(point[1])
+                                        z = float(point[2])
+                                        if z == h and x!= 0. and x != 1. and y != 0. and y != 1.:
+                                            if randomshift:
+                                                x += 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
+                                                y += 2 * (random.random() - 0.5) * h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
 
-                                        else:
-                                            x +=  h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
-                                            y +=  h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
-                                        line = str(x) + " " + str(y) + " " + str(z)
-                                g.write(line + "\n")
+                                            else:
+                                                x +=  h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
+                                                y +=  h * np.tan(alpha * 2. * np.pi/360.)/np.sqrt(2.)
+                                            line = str(x) + " " + str(y) + " " + str(z)
+                                    g.write(line + "\n")
+
+                            if line.startswith("$EndEntities"):
+                                entities = False
 
                                 
                         

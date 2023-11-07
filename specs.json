@@ -2,11 +2,11 @@
     "path_to_polyfem_bin": "../polyfem/build/PolyFEM_bin",
     "path_to_gmsh_bin": "../gmsh-4.11.1-Linux64/bin/gmsh",
     "thickness_bounds": [6,17],
-    "inplaneRes_bounds": [5,10],
-    "outofplaneRes_bounds":[0,3],
+    "inplaneRes_bounds": [6,7],
+    "outofplaneRes_bounds":[0,1],
     "poissonRatios":[0.0],
     "shift": {
-        "shift_angles": [45],  
+        "shift_angles": [20],  
         "randomshift": true
     }
 

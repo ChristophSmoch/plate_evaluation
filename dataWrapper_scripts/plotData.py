@@ -114,9 +114,9 @@ if __name__ == "__main__":
     data_list3 = load_data_from_json(file_path3)
     data_list4 = load_data_from_json(file_path4)
 
-    thickness = [2**(-i) for i in range(6,14)]
+    thickness = [2**(-i) for i in range(11,12)]
     outofplaneRes = [2**(-i) for i in range( 15)]
-    outofplaneRes_div =  [2**(i) for i in range(3)]
+    outofplaneRes_div =  [2**(i) for i in range(1)]
     # outofplaneRes_div.append(2**(-i) for i in range(4))
     # print(outofplaneRes_div)
     inplaneRes = [2**(-i) for i in range(4,10)]
@@ -129,21 +129,21 @@ if __name__ == "__main__":
 
             fig.add_trace(go.Scatter(x=-np.log2(x_values1), y=y_values1, mode= 'lines+markers',
                                     name="pesopt_H=2^-" + str(int(-np.log2(H))) , text="pesopt_H=2^-" + str(int(-np.log2(H))), marker=dict(size=10)))
-            for g in outofplaneRes_div:
+            # for g in outofplaneRes_div:
 
-                x_values2, y_values2, name2 = accumulate_data_polyfem(data_list2, x_key, y_key, "H", H, "g", g)
-                if(len(x_values2) >=3):
-                    fig.add_trace(go.Scatter(x=-np.log2(x_values2), y=y_values2, mode= 'lines+markers',
-                                    name="polyfem_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
+                # x_values2, y_values2, name2 = accumulate_data_polyfem(data_list2, x_key, y_key, "H", H, "g", g)
+                # if(len(x_values2) >=3):
+                #     fig.add_trace(go.Scatter(x=-np.log2(x_values2), y=y_values2, mode= 'lines+markers',
+                #                     name="polyfem_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
 
-                x_values3, y_values3, name3 = accumulate_data_polyfem(data_list3, x_key, y_key, "H", H, "g", g)
-                if(len(x_values3) >=3):
-                    fig.add_trace(go.Scatter(x=-np.log2(x_values3), y=y_values3, mode= 'lines+markers',
-                                        name="polyfem_hex_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_hex_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
-                x_values4, y_values4, name4 = accumulate_data_polyfem(data_list4, x_key, y_key, "H", H, "g", g)
-                if(len(x_values4) >=3):
-                    fig.add_trace(go.Scatter(x=-np.log2(x_values4), y=y_values4, mode= 'lines+markers',
-                                        name="polyfem_prism_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_prism_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
+                #   x_values3, y_values3, name3 = accumulate_data_polyfem(data_list3, x_key, y_key, "H", H, "g", g)
+                # if(len(x_values3) >=3):
+                #     fig.add_trace(go.Scatter(x=-np.log2(x_values3), y=y_values3, mode= 'lines+markers',
+                #                       name="polyfem_hex_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_hex_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
+                # x_values4, y_values4, name4 = accumulate_data_polyfem(data_list4, x_key, y_key, "H", H, "g", g)
+                # if(len(x_values4) >=3):
+                #     fig.add_trace(go.Scatter(x=-np.log2(x_values4), y=y_values4, mode= 'lines+markers',
+                #                         name="polyfem_prism_H=2^-" + str(int(-np.log2(H))) + "_g=" + str(g), text="polyfem_prism_H=2^-" + str(int(-np.log2(H))) + "_g=2^" + str(int(np.log2(g))), marker=dict(size=10)))
         fig.update_xaxes(
         ticktext=["2^-" + str(i ) for i in range(6,17)],
         tickvals=np.arange(6,17) )
@@ -212,7 +212,8 @@ if __name__ == "__main__":
                     xaxis_title=x_key,
                     yaxis_title=y_key,
                     hovermode='closest',
-                    yaxis_type='log'
+                    # yaxis_type='log',
+                    yaxis_range=[0.0005, 0.0016],
                     )
 
     fig.show()
