@@ -131,9 +131,9 @@ for H in inplaneRes:
 regshiftjson = json.dumps(dict_reg_shift)
 regjson = json.dumps(dict_reg)
 
-with open("polyfem_hexahedral_regular_shifted_data.json", "w") as outfile:
+with open("polyfem_hexahedral_shifted_data.json", "w") as outfile:
     outfile.write(regshiftjson)
-with open("polyfem_hexahedral_regular_data.json", "w") as outfile:
-    outfile.write(regjson)
+# with open("polyfem_hexahedral_regular_data.json", "w") as outfile:
+#     outfile.write(regjson)
 
  
